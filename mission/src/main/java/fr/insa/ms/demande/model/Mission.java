@@ -12,6 +12,9 @@ public class Mission {
 		this.iddemandeur = iddemandeur;
 		StateInitiale();
 	}
+	public Mission() {
+		
+	}
 	
 	public int getIdmission() {
 		return idmission;

@@ -75,14 +75,20 @@ public class PersonneService {
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "INSERT INTO personne (nom, prenom, age, sexe) VALUES (?, ?, ?, ?)")) {
 
+            System.out.println("Executing SQL query: " + preparedStatement.toString());
+
             preparedStatement.setString(1, nom);
             preparedStatement.setString(2, prenom);
             preparedStatement.setInt(3, age);
             preparedStatement.setString(4, sexe);
+
+            System.out.println("nom: " + nom + ", prenom: " + prenom + ", age: " + age + ", sexe: " + sexe);
+
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("Ajout erreur");
         }
     }
 

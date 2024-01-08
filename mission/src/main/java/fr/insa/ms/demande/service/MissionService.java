@@ -2,6 +2,9 @@ package fr.insa.ms.demande.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import fr.insa.ms.demande.model.Mission;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -45,19 +48,19 @@ public class MissionService {
         return missions;
     }
 
-    public Map<String, Object> getMissionById(int id) {
-        Map<String, Object> mission = new HashMap<>();
+    public Mission getMissionById(int id) {
+        Mission mission = new Mission();  // Assuming you have a Mission class
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM mission WHERE idmission = ?")) {
 
             preparedStatement.setInt(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    mission.put("idmission", resultSet.getInt("idmission"));
-                    mission.put("iddemandeur", resultSet.getInt("iddemandeur"));
-                    mission.put("state", resultSet.getString("state"));
-                    mission.put("score", resultSet.getInt("score"));
-                    mission.put("comment", resultSet.getString("comment"));
+                    mission.setIdmission(resultSet.getInt("idmission"));
+                    mission.setDemandeur(resultSet.getInt("iddemandeur"));
+                    mission.StateInitiale();
+                    mission.setScore(resultSet.getInt("score"));
+                    mission.setComment(resultSet.getString("user_comments"));
                 }
             }
 
@@ -66,7 +69,30 @@ public class MissionService {
         }
         return mission;
     }
+    
+    public Mission getMissionByPersonId(int personId) {
+    	 try (Connection connection = dataSource.getConnection();
+    	         PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM mission WHERE iddemandeur = ? LIMIT 1")) {
 
+    	        preparedStatement.setInt(1, personId);
+    	        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+    	            if (resultSet.next()) {
+    	                Mission mission = new Mission();
+    	                mission.setIdmission(resultSet.getInt("idmission"));
+    	                mission.setDemandeur(resultSet.getInt("iddemandeur"));
+    	                mission.StateInitiale();
+    	                mission.setScore(resultSet.getInt("score"));
+    	                mission.setComment(resultSet.getString("user_comments"));
+    	         
+    	                return mission;
+    	            }
+    	        }
+
+    	    } catch (SQLException e) {
+    	        e.printStackTrace();
+    	    }
+    	    return null;
+    }
     public void saveMission(int id, int iddemandeur, String state, int score, String comment) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(

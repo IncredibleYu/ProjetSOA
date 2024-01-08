@@ -60,7 +60,7 @@ public class PersonneRessource {
             String nom = (String) personne.get("nom");
             String prenom = (String) personne.get("prenom");
 
-            Mission mission = restTemplate.getForObject("http://MissionService/mission/"+id, Mission.class);
+            Mission mission = restTemplate.getForObject("http://localhost:3457/mission/person/"+id, Mission.class);
 
             // Create a new Person instance with the retrieved data
             Person person = new Person(id, nom, prenom, mission.getIdmission());

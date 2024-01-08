@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.insa.ms.demande.model.Mission;
 import fr.insa.ms.demande.service.MissionService;
 
 @RestController
@@ -33,8 +34,13 @@ public class MissionRessource {
     }
 
     @GetMapping("/{id}")
-    public Map<String, Object> getMissionById(@PathVariable("id") int id) {
+    public Mission getMissionById(@PathVariable("id") int id) {
         return missionService.getMissionById(id);
+    }
+    
+    @GetMapping("/person/{personId}")
+    public Mission getMissionsByPersonId(@PathVariable("personId") int personId) {
+        return missionService.getMissionByPersonId(personId);
     }
 
     @PostMapping("/add")
